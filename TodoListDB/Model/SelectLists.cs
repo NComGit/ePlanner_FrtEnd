@@ -10,5 +10,7 @@ namespace TodoListDB.Model
     public class SelectLists
     {
         public SelectList TodoListList { get; set; }
+
+        public SelectList TodoItemList { get; set; }
     }
 }

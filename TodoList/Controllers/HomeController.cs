@@ -32,6 +32,13 @@ namespace TodoList.Controllers
             return View(ddlFilter);
         }
 
+        public JsonResult GetTodoItems(int todoListId)
+        {
+            var todoItems = _Repo.GetTodoItems(todoListId).Select(_ModelMapping.GetTodoItem).ToList();
+            return Json(todoItems, JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

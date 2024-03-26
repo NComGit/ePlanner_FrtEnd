@@ -17,7 +17,7 @@ namespace TodoListDB.Model
                 title = item.title,
                 complete_incomplete = item.complete_incomplete,
                 userDelegatedToId = item.userDelegatedToId,
-                dueDate = (DateTime)item.dueDate,
+                dueDate = (DateTime?)item.dueDate ?? default(DateTime?),
             };
         }
 

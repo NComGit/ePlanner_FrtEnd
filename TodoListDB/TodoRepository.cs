@@ -28,6 +28,15 @@ namespace TodoListDB
             throw new NotImplementedException();
         }
 
+        public IQueryable<TodoList> GetTodoItems()
+        {
+            return (IQueryable<TodoList>)_Ctx.Context.TodoItems;
+        }
+        public IEnumerable<TodoItem> GetTodoItems(int todoListId)
+        {
+            return _Ctx.Context.TodoItems.Where(t => t.todoListId == todoListId).ToList();
+        }
+
         public IQueryable<TodoList> GetTodoLists()
         {
             return _Ctx.Context.TodoLists;

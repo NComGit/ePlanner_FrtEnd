@@ -13,7 +13,7 @@ namespace TodoListDB.Model
         public string title { get; set; }
         public string complete_incomplete { get; set; }
         public int? userDelegatedToId { get; set; }
-        public DateTime dueDate { get; set; }
+        public DateTime? dueDate { get; set; }
 
     }
 }

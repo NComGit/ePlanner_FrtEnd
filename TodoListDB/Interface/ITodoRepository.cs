@@ -11,5 +11,9 @@ namespace TodoListDB.Interface
         IQueryable<TodoList> GetTodoLists();
         bool IsTodoListExist(string title);
         bool AddTodoList(int userId, string title, string description);
+
+        IQueryable<TodoList> GetTodoItems();
+        IEnumerable<TodoItem> GetTodoItems(int todoListId);
+      
     }
 }
