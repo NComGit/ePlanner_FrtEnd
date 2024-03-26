@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TodoDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="TodoItem">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="todoListId" Type="Int32" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="complete_incomplete" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="userDelegatedToId" Type="Int32" />
+    <Property Name="dueDate" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="TodoList" Relationship="Self.FK__TodoItems__todoL__76969D2E" FromRole="TodoItems" ToRole="TodoLists" />
+    <NavigationProperty Name="User" Relationship="Self.FK__TodoItems__userD__778AC167" FromRole="TodoItems" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="TodoListAccess">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="todoListId" Type="Int32" Nullable="false" />
+    <Property Name="userId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="TodoList" Relationship="Self.FK__TodoListA__todoL__7A672E12" FromRole="TodoListAccess" ToRole="TodoLists" />
+    <NavigationProperty Name="User" Relationship="Self.FK__TodoListA__userI__7B5B524B" FromRole="TodoListAccess" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="TodoList">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userId" Type="Int32" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="TodoItems" Relationship="Self.FK__TodoItems__todoL__76969D2E" FromRole="TodoLists" ToRole="TodoItems" />
+    <NavigationProperty Name="TodoListAccesses" Relationship="Self.FK__TodoListA__todoL__7A672E12" FromRole="TodoLists" ToRole="TodoListAccess" />
+    <NavigationProperty Name="User" Relationship="Self.FK__TodoLists__userI__72C60C4A" FromRole="TodoLists" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="TodoItems" Relationship="Self.FK__TodoItems__userD__778AC167" FromRole="Users" ToRole="TodoItems" />
+    <NavigationProperty Name="TodoListAccesses" Relationship="Self.FK__TodoListA__userI__7B5B524B" FromRole="Users" ToRole="TodoListAccess" />
+    <NavigationProperty Name="TodoLists" Relationship="Self.FK__TodoLists__userI__72C60C4A" FromRole="Users" ToRole="TodoLists" />
+  </EntityType>
+  <Association Name="FK__TodoItems__todoL__76969D2E">
+    <End Role="TodoLists" Type="Self.TodoList" Multiplicity="1" />
+    <End Role="TodoItems" Type="Self.TodoItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TodoLists">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TodoItems">
+        <PropertyRef Name="todoListId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TodoItems__userD__778AC167">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="TodoItems" Type="Self.TodoItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TodoItems">
+        <PropertyRef Name="userDelegatedToId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TodoListA__todoL__7A672E12">
+    <End Role="TodoLists" Type="Self.TodoList" Multiplicity="1" />
+    <End Role="TodoListAccess" Type="Self.TodoListAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TodoLists">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TodoListAccess">
+        <PropertyRef Name="todoListId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TodoListA__userI__7B5B524B">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="TodoListAccess" Type="Self.TodoListAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TodoListAccess">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TodoLists__userI__72C60C4A">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="TodoLists" Type="Self.TodoList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="TodoLists">
+        <PropertyRef Name="userId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TodoDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TodoItems" EntityType="Self.TodoItem" />
+    <EntitySet Name="TodoListAccesses" EntityType="Self.TodoListAccess" />
+    <EntitySet Name="TodoLists" EntityType="Self.TodoList" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK__TodoItems__todoL__76969D2E" Association="Self.FK__TodoItems__todoL__76969D2E">
+      <End Role="TodoLists" EntitySet="TodoLists" />
+      <End Role="TodoItems" EntitySet="TodoItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TodoItems__userD__778AC167" Association="Self.FK__TodoItems__userD__778AC167">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="TodoItems" EntitySet="TodoItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TodoListA__todoL__7A672E12" Association="Self.FK__TodoListA__todoL__7A672E12">
+      <End Role="TodoLists" EntitySet="TodoLists" />
+      <End Role="TodoListAccess" EntitySet="TodoListAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TodoListA__userI__7B5B524B" Association="Self.FK__TodoListA__userI__7B5B524B">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="TodoListAccess" EntitySet="TodoListAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TodoLists__userI__72C60C4A" Association="Self.FK__TodoLists__userI__72C60C4A">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="TodoLists" EntitySet="TodoLists" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TodoDBModelStoreContainer" CdmEntityContainer="TodoDBEntities">
+    <EntitySetMapping Name="TodoItems">
+      <EntityTypeMapping TypeName="TodoDBModel.TodoItem">
+        <MappingFragment StoreEntitySet="TodoItems">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="todoListId" ColumnName="todoListId" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="complete_incomplete" ColumnName="complete_incomplete" />
+          <ScalarProperty Name="userDelegatedToId" ColumnName="userDelegatedToId" />
+          <ScalarProperty Name="dueDate" ColumnName="dueDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TodoListAccesses">
+      <EntityTypeMapping TypeName="TodoDBModel.TodoListAccess">
+        <MappingFragment StoreEntitySet="TodoListAccess">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="todoListId" ColumnName="todoListId" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TodoLists">
+      <EntityTypeMapping TypeName="TodoDBModel.TodoList">
+        <MappingFragment StoreEntitySet="TodoLists">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="description" ColumnName="description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="TodoDBModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="password" ColumnName="password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

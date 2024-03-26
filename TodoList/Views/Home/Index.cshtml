@@ -1,0 +1,253 @@
+﻿@model TodoListDB.Model.SelectLists
+@{
+    ViewBag.Title = "Home Page";
+}
+@using (Html.BeginForm())
+{
+    <div class="jumbotron">
+        <h1>My first MVC website</h1>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body ">
+                <div class="form-horizontal" id="freeze">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <h2>Getting Employees</h2>
+                            @Html.DropDownList("todo", Model.TodoListList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="modal fade" id="AddtModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="AddModalLabel">Add employee</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div class="form-group">
+                                <label for="txtFName">First Name</label>
+                                <input type="text" class="form-control" id="txtFName" placeholder="First Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtLName">Last Name</label>
+                                <input type="text" class="form-control" id="txtLName" placeholder="Last Name" required>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="txtEmail">Email</label>
+                                        <input type="text" class="form-control" id="txtEmail" placeholder="Email" required>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="txtOccup">Occupation</label>
+                                        <input type="text" class="form-control" id="txtOccup" placeholder="Occupation" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="txtDepartment">Department</label>
+                                        <input type="text" class="form-control" id="txtDepartment" placeholder="Department" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary confirm-insert">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <div id="gridalerts"></div>
+            <div id="gridEmpl"></div>
+        </div>
+    </div>
+}
+@section scripts
+{
+    <script type="text/javascript">
+
+        var NewEmployee = {
+            fName: '#fName',
+            lName: '#lName',
+            email: '#email',
+            occupation: '#occupation',
+            department:"",
+            Id: '#AddModal',
+            Show: function () {
+                $(this.Id).modal('show');
+            },
+            Hide: function () {
+                $(this.Id).modal('hide');
+            },
+            ClearForm: function () {
+                $(this.fName).val('');
+                $(this.lName).val('');
+                $(this.email).val('');
+                $(this.occupation).val('');
+                $(this.department).val('');
+            },
+            IsValid: function () {
+                var undentifiedList = null;
+                var UlItems = null;
+                var IsValid = true;
+                var Valid = new Validation('message');
+
+                if ($(this.fName).val() == '') {
+                    IsValid = false;
+                }
+
+                if ($(this.lName).val() == '') {
+                    IsValid = false;
+                    UlItems += '<li>Last name is required</li>';
+                }
+                if ($(this.email).val()  == '') {
+                    IsValid = false;
+                    UlItems += '<li>email is required</li>';
+                }
+                undentifiedList = '<ul>' + UlItems + '</ul>'
+
+                if (!IsValid) {
+                    Validation.ShowErrorMessage(undentifiedList);
+                    return false;
+                }
+
+                return true;
+            }
+
+        }
+        $(document).on('click', '.plus-icon', function () {
+            $('#AddtModal').modal('show')
+            $('#AddtModal').data('emplid', $(this).data('emplid'));
+
+        })
+        //insert-confirm
+        $('.confirm-insert').click(function () {
+
+            var Validate = new Validation('emplid');
+            if (NewEmployee.IsValid()) {
+                Grid.Add({
+                    fName: $(NewEmployee.fName).val(),
+                    lName: $(NewEmployee.lName).val(),
+                    email: $(NewEmployee.email).val(),
+                    occupation: $(NewEmployee.occupation).val(),
+                    department: $(NewEmployee.department).val()
+                },
+                    function (data) {
+                        if (data.IsValid) {
+                            Validate.ShowSuccessMessage('Employee was added successfully')
+                            Grid.RefreshGrid();
+                        }
+                        else {
+                            Validate.ShowErrorMessage(data.Message);
+                        }
+                    },
+                    function (data) {
+                        Validate.ShowErrorMessage('Unexpected error occured')
+                    });
+            }
+
+
+        })
+        //delete popup
+        $(document).on('click', '.delete-icon', function () {
+            var temp = $('#deleteModal').data('typeid', $(this).data('typeid'));
+            $('#deleteModal').modal('show')
+            $('#deleteModal').data('emplid', $(this).data('emplid'));
+        });
+        //delete confirm
+        $('.confirm-delete').click(function () {
+            var Validate = new Validaiton('formalert');
+
+            var s = $('#deleteModal').data('emplid');
+            Grid.Delete({ ID: s },
+                function (data) {
+                    if (data.IsValid) {
+                        $('#deleteModal').modal('hide');
+                        Validation.ShowSuccessMessage('Category was deleted successfully')
+                        Grid.RefreshGrid();
+                    }
+                    else {
+                        AlertObj.ShowErrorMessage(data.Message);
+                    }
+
+                },
+                function (data) {
+                    $('#deleteModal').modal('hide');
+                    Validation.ShowErrorMessage('Unexpected error occured');
+
+                });
+        })
+
+
+        $('#AddEmplBtn').click(function () {
+            //$('#NewTechnicianModal').modal('show');
+            NewTechType.ClearForm();
+            NewTechType.Show()
+        })
+
+         $("#gridEmpl").jsGrid({
+                // self: this,
+                width: "100%",
+                height: "auto",
+                autoload: true,
+                pageLoading: true,
+                editing: true,
+                filtering: false,
+                sorting: true,
+                paging: true,
+                pageSize: 30,
+                pageButtonCount: 3,
+                pageNextText: ">",
+                pageLastText: ">>",
+                pagePrevText: "<",
+                pageFirstText: "<<",
+                fields: [
+                    { title: "First Name", name: "FirstName", type: "input", width: 50 },
+                    { title: "Last Name", name: "LastName",type:"input", width: 50 },
+                    { title: "Department", name: "occupation", type: "input", width: 50 },
+                    { title: "email", name: "email", type: "input", width: 50 }
+                ],
+                controller: {
+                    loadData: function (filter) {
+
+                        //filter["Id"] = 0;
+                        //filter["occupation"] = "";
+
+                        var d = $.Deferred();
+
+                        return $.ajax({
+                            url: '@Url.Action("GetEmployee", "Home")',
+                            type: 'GET',
+                            dataType: "JSON",
+                            data: filter
+
+                        }).done(function (response) {
+                            d.resolve(response);
+                        })
+                    }
+                }
+
+            });
+    </script>
+}
