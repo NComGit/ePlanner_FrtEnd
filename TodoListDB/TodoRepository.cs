@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,31 @@ namespace TodoListDB
         public bool IsTodoListExist(string title)
         {
             throw new NotImplementedException();
+        }
+        /*
+        public bool UpdateTodoItemStatus(int todoItemId, string newStatus)
+        {
+            var todoItem = _Ctx.Context.TodoItems.FirstOrDefault(t => t.id == todoItemId);
+            if (todoItem != null)
+            {
+                todoItem.complete_incomplete = newStatus;
+                _Ctx.Context.Entry(todoItem).State = EntityState.Modified;
+                _Ctx.Context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        */
+        public bool UpdateTodoItemStatus(int todoItemId, string newStatus)
+        {
+            var todoItem = _Ctx.Context.TodoItems.FirstOrDefault(t => t.id == todoItemId);
+            if (todoItem != null)
+            {
+                todoItem.complete_incomplete = newStatus;
+                _Ctx.Context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

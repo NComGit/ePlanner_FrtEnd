@@ -8,8 +8,8 @@
         <h1>E-Planner</h1>
     </div>
 
- 
-   
+
+
     <div class="row">
         <div class="form-group">
             <div id="gridalerts"></div>
@@ -27,6 +27,7 @@
                 <th>Status</th>
                 <th>Due Date</th>
                 <th>User Delegated To ID</th>
+                <th>Action</th>
                 <!-- Add other columns as needed -->
             </tr>
         </thead>
@@ -44,7 +45,7 @@
             lName: '#lName',
             email: '#email',
             occupation: '#occupation',
-            department:"",
+            department: "",
             Id: '#AddModal',
             Show: function () {
                 $(this.Id).modal('show');
@@ -73,7 +74,7 @@
                     IsValid = false;
                     UlItems += '<li>Last name is required</li>';
                 }
-                if ($(this.email).val()  == '') {
+                if ($(this.email).val() == '') {
                     IsValid = false;
                     UlItems += '<li>email is required</li>';
                 }
@@ -157,22 +158,48 @@
             NewTechType.Show()
         })
 
-        
+
     </script>
     <script type="text/javascript">
+   function changeStatus(id, currentStatus) {
+    var newStatus = currentStatus === 'complete' ? 'incomplete' : 'complete';
+
+    $.post('@Url.Action("ChangeStatus", "Home")', { id: id, newStatus: newStatus }, function(data) {
+        if (data.success) {
+            $('#status-' + id).text(newStatus);
+            // Toggle button text based on new status
+            var buttonText = newStatus === 'complete' ? 'Mark as Incomplete' : 'Mark as Complete';
+            $('button[data-id="' + id + '"]').text(buttonText);
+
+            // Optional: Toggle button class if you want to change its appearance
+            $('button[data-id="' + id + '"]').toggleClass('btn-success btn-warning');
+        } else {
+            alert('Error updating status: ' + data.message);
+        }
+    });
+}
  // Event listener for dropdown change
  $('#todoListDropdown').change(function() {
      var selectedListId = $(this).val();
      if (selectedListId) {
          $.getJSON('@Url.Action("GetTodoItems", "Home")', { todoListId: selectedListId }, function(data) {
              var rows = '';
-             $.each(data, function(i, item) {
-                 rows += '<tr>'+
-                         '<td>'+ item.title +'</td>'+
-                         '<td>'+ item.complete_incomplete +'</td>'+
-                     '<td>' + item.dueDate + '</td>' +
-                     '<td>' + item.userDelegatedToId + '</td>'
-                         '</tr>';
+             $.each(data, function (i, item) {
+                 var statusText = item.complete_incomplete || 'incomplete';
+                 var buttonClass = statusText === 'complete' ? 'btn-warning' : 'btn-success';
+                 var buttonText = statusText === 'complete' ? 'Mark as Incomplete' : 'Mark as Complete';
+                 var dueDate = item.dueDate ? new Date(parseInt(item.dueDate.substr(6))) : 'No due date'; // Extract milliseconds and create Date object
+                 dueDate = dueDate instanceof Date ? dueDate.toLocaleDateString() : dueDate; // Format date
+
+
+
+                 rows += '<tr>' +
+                     '<td>' + item.title + '</td>' +
+                     '<td id="status-' + item.id + '">' + item.complete_incomplete + '</td>' +
+                     '<td>' + dueDate + '</td>' +
+                     '<td>' + (item.userDelegatedToId ? item.userDelegatedToId : 'Item not delegated') + '</td>' +
+                     '<td><button class="btn ' + buttonClass + '" type="button" data-id="' + item.id + '" onclick="changeStatus(' + item.id + ', \'' + statusText + '\')">' + buttonText + '</button></td>' +
+                     '</tr>';
              });
              $('#todoItemsTable tbody').html(rows);
          });
