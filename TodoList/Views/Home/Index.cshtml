@@ -171,7 +171,7 @@
             var buttonText = newStatus === 'complete' ? 'Mark as Incomplete' : 'Mark as Complete';
             $('button[data-id="' + id + '"]').text(buttonText);
 
-            // Optional: Toggle button class if you want to change its appearance
+
             $('button[data-id="' + id + '"]').toggleClass('btn-success btn-warning');
         } else {
             alert('Error updating status: ' + data.message);

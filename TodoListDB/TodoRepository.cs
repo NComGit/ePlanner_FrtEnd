@@ -47,20 +47,7 @@ namespace TodoListDB
         {
             throw new NotImplementedException();
         }
-        /*
-        public bool UpdateTodoItemStatus(int todoItemId, string newStatus)
-        {
-            var todoItem = _Ctx.Context.TodoItems.FirstOrDefault(t => t.id == todoItemId);
-            if (todoItem != null)
-            {
-                todoItem.complete_incomplete = newStatus;
-                _Ctx.Context.Entry(todoItem).State = EntityState.Modified;
-                _Ctx.Context.SaveChanges();
-                return true;
-            }
-            return false;
-        }
-        */
+
         public bool UpdateTodoItemStatus(int todoItemId, string newStatus)
         {
             var todoItem = _Ctx.Context.TodoItems.FirstOrDefault(t => t.id == todoItemId);

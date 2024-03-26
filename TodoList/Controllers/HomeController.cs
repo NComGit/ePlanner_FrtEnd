@@ -31,30 +31,7 @@ namespace TodoList.Controllers
 
             return View(ddlFilter);
         }
-        /*
-        [HttpPost]
-        public ActionResult ChangeStatus(int id)
-        {
-            try
-            {
-                // Use the repository to change the status
-                bool result = _Repo.UpdateTodoItemStatus(id, "complete");
-                if (result)
-                {
-                    return Json(new { success = true });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Todo item not found or could not be updated." });
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception...
-                return Json(new { success = false, message = "An error occurred." });
-            }
-        }
-        */
+ 
         [HttpPost]
         public ActionResult ChangeStatus(int id, string newStatus)
         {
@@ -73,7 +50,7 @@ namespace TodoList.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception...
+                // Log the exception
                 return Json(new { success = false, message = "An error occurred." });
             }
         }
